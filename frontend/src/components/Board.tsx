@@ -7,6 +7,7 @@ const Board = ({
   ws,
   color,
   moveCount,
+  setBoard,
 }: {
   chess: Chess;
   board: ({
@@ -16,49 +17,59 @@ const Board = ({
   } | null)[][];
   ws: WebSocket;
   color: string;
-  moveCount: number;
+  moveCount: React.MutableRefObject<number>;
+  setBoard: (
+    value: React.SetStateAction<
+      ({
+        square: Square;
+        type: PieceSymbol;
+        color: Color;
+      } | null)[][]
+    >
+  ) => void;
 }) => {
   const [eror, setEror] = useState<string | null>(null);
   const [from, setFrom] = useState<string | null>(null);
-  console.log("move count: ", moveCount);
+
   return (
     <div
       className={`flex ${color == "white" ? "flex-col " : "flex-col-reverse"} `}
     >
-      {chess.board().map((row, i) => {
+      {board.map((row, i) => {
         return (
-          <div className="flex" key={i}>
+          <div className="flex justify-center " key={i}>
             {row.map((sq, j) => (
               <div
                 onClick={() => {
-                  // if (color == "white") {
-                  //   if (moveCount % 2 !== 0) return;
-                  // } else {
-                  //   if (moveCount % 2 == 0) return;
-                  // }
+                  if (color == "white") {
+                    if (moveCount.current % 2 !== 0) return;
+                  } else {
+                    if (moveCount.current % 2 == 0) return;
+                  }
+
                   if (eror && sq) setEror(null);
                   const letter = String.fromCharCode(j + 97);
                   const no = 8 - i;
                   const sqr = letter + no;
-                  // console.log(sqr);
+
                   if (!from) {
                     if (!sq) {
                       return setEror("invalid move; pick a piece");
                     }
                     if (eror) setEror(null);
                     setFrom(sqr);
-                    // console.log("from: ", sqr);
                   } else {
-                    ws.send(
-                      JSON.stringify({
-                        type: "move",
-                        move: { from, to: sqr },
-                      })
-                    );
-                    // console.log(JSON.stringify({ from, to: sqr }));
                     try {
                       chess.move({ from, to: sqr });
-                      // console.log(chess.board());
+                      setBoard(chess.board());
+
+                      ws.send(
+                        JSON.stringify({
+                          type: "move",
+                          move: { from, to: sqr },
+                        })
+                      );
+                      moveCount.current++;
                       setFrom(null);
                     } catch (err) {
                       console.log(err);
@@ -67,14 +78,25 @@ const Board = ({
                     }
                   }
                 }}
-                className={`grid cursor-pointer place-items-center w-14 h-14 ${
+                className={`grid cursor-pointer place-items-center w-16 h-16 ${
                   (i + j) % 2 == 0 ? "bg-white" : "bg-green-500"
                 } ${sq?.color == "w" ? "text-red-500" : "text-black"} `}
                 key={j}
               >
                 {/* {String.fromCharCode(j + 97)}
               {8 - i} */}
-                {sq?.type}
+
+                {sq && (
+                  <img
+                    src={`/${
+                      sq?.color == "w"
+                        ? "w" + sq.type + ".png"
+                        : "b" + sq?.type + ".png"
+                    }`}
+                    alt="chess"
+                  />
+                )}
+
                 {/* {sq?.square} */}
               </div>
             ))}
