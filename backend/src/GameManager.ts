@@ -51,7 +51,7 @@ export class GameManager {
         const game = this.games.find(
           (game) => game.p1 === socket || game.p2 === socket
         );
-
+        game?.makeMove(socket, data.move);
         console.log(game?.chess.ascii());
       }
     });

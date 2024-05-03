@@ -38,9 +38,16 @@ export class Game {
     }
     try {
       this.chess.move(move);
+      this.moveCount++;
+      if (socket == this.p1) {
+        this.p2.send(JSON.stringify({ type: "move", move }));
+      } else {
+        this.p1.send(JSON.stringify({ type: "move", move }));
+      }
     } catch (err) {
       console.log(err);
       console.log("invalid move");
+      socket.send("invalid move");
       return;
     }
 
