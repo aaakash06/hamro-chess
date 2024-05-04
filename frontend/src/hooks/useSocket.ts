@@ -3,7 +3,7 @@ export default function useSocket() {
   const [ws, setws] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket("wss://hamro-chess-1.onrender.com/");
+    const ws = new WebSocket("wss://hamro-chess-1.onrender.com");
     ws.onopen = () => {
       console.log("connected to the wss");
       setws(ws);
