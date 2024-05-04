@@ -8,7 +8,7 @@ import Board from "./Board";
 const ChessBoard = () => {
   const ws: WebSocket | null = useSocket();
 
-  const [chess, setChess] = useState<Chess>(new Chess());
+  const chess = new Chess();
   const [board, setBoard] = useState(chess.board());
   const [color, setColor] = useState<string | null>(null);
   const moveCount = useRef(0);
