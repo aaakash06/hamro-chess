@@ -9,7 +9,7 @@ function App() {
       <h1 className="absolute top-4 left-4 text-white text-4xl font-extrabold  max-md:text-xl">
         Hamro-Chess
       </h1>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/board" element={<ChessBoard />} />
