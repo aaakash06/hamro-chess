@@ -1,4 +1,3 @@
-import React from "react";
 import { Chess } from "chess.js";
 const ChessImage = () => {
   const chess = new Chess();

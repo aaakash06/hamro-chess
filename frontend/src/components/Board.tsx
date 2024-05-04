@@ -1,5 +1,5 @@
 import { Chess, Color, PieceSymbol, Square } from "chess.js";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Board = ({
   chess,
