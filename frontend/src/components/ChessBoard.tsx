@@ -8,7 +8,7 @@ import Board from "./Board";
 const ChessBoard = () => {
   const ws: WebSocket | null = useSocket();
 
-  const chess = new Chess();
+  const [chess, setChess] = useState(new Chess());
   const [board, setBoard] = useState(chess.board());
   const [color, setColor] = useState<string | null>(null);
   const moveCount = useRef(0);
@@ -30,7 +30,9 @@ const ChessBoard = () => {
           break;
       }
     };
-  }, [ws]);
+  }, [ws, chess]);
+  const noExecute = false;
+  if (noExecute) setChess(new Chess());
 
   if (!ws)
     return (
@@ -54,6 +56,7 @@ const ChessBoard = () => {
       </div>
       // </div>
     );
+
   return (
     <div className="w-full min-h-screen bg-neutral-800  text-center">
       <div className="h-screen sm:w-[89%] w-[97%] mx-auto">

@@ -1,5 +1,5 @@
 import { Chess, Color, PieceSymbol, Square } from "chess.js";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Board = ({
   chess,
@@ -29,7 +29,7 @@ const Board = ({
   ) => void;
 }) => {
   const [eror, setEror] = useState<string | null>(null);
-  const [from, setFrom] = useState<string | null>(null);
+  const from = useRef<null | string>(null);
 
   return (
     <div
@@ -40,7 +40,6 @@ const Board = ({
           <div className="flex justify-center " key={i}>
             {row.map((sq, j) => (
               <div
-                id={`${i}${j}sq`}
                 onClick={() => {
                   if (color == "white") {
                     if (moveCount.current % 2 !== 0) return;
@@ -53,31 +52,30 @@ const Board = ({
                   const no = 8 - i;
                   const sqr = letter + no;
 
-                  if (!from) {
+                  if (!from.current) {
                     if (!sq) {
                       return setEror("invalid move; pick a piece");
                     }
                     if (eror) setEror(null);
-                    setFrom(sqr);
-                    document.getElementById(`${i}${j}sq`)!.style.border =
-                      "1px solid blue";
+                    from.current = sqr;
                   } else {
                     try {
-                      chess.move({ from, to: sqr });
+                      chess.move({ from: from.current, to: sqr });
                       setBoard(chess.board());
 
                       ws.send(
                         JSON.stringify({
                           type: "move",
-                          move: { from, to: sqr },
+                          move: { from: from.current, to: sqr },
                         })
                       );
                       moveCount.current++;
-                      setFrom(null);
+                      from.current = null;
                     } catch (err) {
                       console.log(err);
                       console.log("invalid move");
                       setEror("invalid error");
+                      return (from.current = null);
                     }
                   }
                 }}
