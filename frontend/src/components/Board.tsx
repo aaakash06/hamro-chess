@@ -40,6 +40,7 @@ const Board = ({
           <div className="flex justify-center " key={i}>
             {row.map((sq, j) => (
               <div
+                id={`${i}${j}sq`}
                 onClick={() => {
                   if (color == "white") {
                     if (moveCount.current % 2 !== 0) return;
@@ -58,6 +59,8 @@ const Board = ({
                     }
                     if (eror) setEror(null);
                     setFrom(sqr);
+                    document.getElementById(`${i}${j}sq`)!.style.border =
+                      "1px solid blue";
                   } else {
                     try {
                       chess.move({ from, to: sqr });
@@ -78,7 +81,7 @@ const Board = ({
                     }
                   }
                 }}
-                className={`grid cursor-pointer place-items-center w-16 h-16 ${
+                className={`grid cursor-pointer place-items-center max-md:w-16 max-md:h-16 max-sm:w-12 max-sm:h-12  w-20 h-20 lg:w-[5rem] lg:h-[5rem]  ${
                   (i + j) % 2 == 0 ? "bg-white" : "bg-green-500"
                 } ${sq?.color == "w" ? "text-red-500" : "text-black"} `}
                 key={j}
