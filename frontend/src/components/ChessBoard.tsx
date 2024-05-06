@@ -36,8 +36,13 @@ const ChessBoard = () => {
 
   if (!ws)
     return (
-      <div>
-        <h3>Connecting.......</h3>
+      <div className="w-full min-h-screen bg-neutral-800  text-center text-white">
+        <h1 className="pt-[5rem] text-white text-xl font-mono tracking-wider font-extrabold max-md:text-2xl">
+          connecting....
+        </h1>
+        <h1 className="pt-[5rem] text-white text-xl font-mono tracking-wider font-extrabold max-md:text-2xl">
+          please wait for about 50sec for the server to start. free hosting🥲🥲
+        </h1>
       </div>
     );
   else if (!color)
